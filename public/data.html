@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retreive data from server</title>
+</head>
+<body>
+    <h1>Retreive data from server</h1>
+    <script>
+        const request = '/api/get';
+
+        loadData(request)
+            .then(function(response){
+                console.log(response);
+
+                for(let i=0; i<response.length; i++){
+                    console.log(response[i]);
+                    const elem = document.createElement('div');
+                    elem.textContent = 'latitude: '+response[i].coords.latitude+' longitude: '+response[i].coords.longitude;
+
+                    document.body.append(elem);
+                }
+            })
+
+
+        async function loadData(request){
+            const response  = await fetch(request);
+            const rawData   = await response.json();
+            return rawData;
+        }
+    </script>
+</body>
+</html>

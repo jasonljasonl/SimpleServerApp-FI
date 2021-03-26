@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Side application</title>
+</head>
+<body>
+    <h1>Welcome on the server side application</h1>
+    <h2>Where am I?</h2>
+    <p>Latitude: <span id = "lat"></span>&deg
+    <br>Longitude: <span id = "long"></span>&deg</p>
+
+
+    <script>
+        if ("geolocation" in navigator) {
+            /* la géolocalisation est disponible */
+            console.log("geoloc available");
+
+            //recupérer la geoloc du client de manière asynchrone
+            navigator.geolocation.getCurrentPosition(async function(position){
+                console.log(position);
+                const lat           = position.coords.latitude;
+                const long          = position.coords.longitude;
+
+                //écrire la donnée sur la page
+                document.getElementById("lat").innerHTML    = lat;
+                document.getElementById("long").innerHTML   = long;
+
+                //envoyer les donnée à l'API
+                const data = {
+                    coords : {
+                        latitude: lat, 
+                        longitude : long
+                    }
+                };
+                const options = {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify(data)
+                }
+                const response  = await fetch('/api/send', options);
+                //lire la réponse du serveur
+                const rawData   = await response.json();
+                console.log(rawData);
+            });
+        } else {
+            /* la géolocalisation n'est pas disponible */
+            console.log("geoloc not available")
+        }
+    </script>
+</body>
+</html>
